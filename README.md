@@ -25,3 +25,17 @@ micro_speech的setup的一半。目前我只解决了printf和complex头文件�
 （现在卡在static静态全局变量导致卡住的问题，可能和内存有关）
 
 ```
+
+## key code  
+* mymalloc for micro frontend  
+https://github.com/weimingtom/rt1020-evk-playground/blob/master/sai_no_mic/src/micro_frontend/lib/malloc.h  
+https://github.com/weimingtom/rt1020-evk-playground/blob/master/sai_no_mic/src/micro_frontend/lib/malloc.c  
+* frontend  
+https://github.com/weimingtom/rt1020-evk-playground/blob/master/sai_no_mic/src/micro_frontend/lib/frontend_util.c
+* main entry, using setup and loop  
+https://github.com/weimingtom/rt1020-evk-playground/blob/master/sai_no_mic/source/sai.c
+* setup and loop function implementation  
+https://github.com/weimingtom/rt1020-evk-playground/blob/master/sai_no_mic/src/main_functions.cc  
+* Makefile for ubuntu emulation  
+https://github.com/weimingtom/rt1020-evk-playground/blob/master/sai_no_mic/packs/tensorflow-lite/2.4.0/Makefile  
+https://github.com/weimingtom/rt1020-evk-playground/blob/master/sai_no_mic/src/main.cc  
