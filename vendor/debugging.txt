@@ -1,0 +1,69 @@
+﻿TF_LITE_STATIC_MEMORY
+
+1. 引入cstdio或stdio.h的fprintf和printf就死
+需要屏蔽debug.cc的代码
+
+例如：把printf全部替换成plintf就能找出所有文件
+
+debug.cc
+micro_optional_debug_tools.cc
+op_macros.h
+kiss_fft_log.h
+kiss_fftnd.c
+
+
+TF_LITE_STRIP_ERROR_STRINGS
+#ifndef NDEBUG  // Omit profiler overhead from release builds.
+->
+#if !defined(NDEBUG) && !defined(TF_LITE_STATIC_MEMORY)  // Omit profiler overhead from release builds.
+???micro_interpreter.cc
+
+2. 可以把代码放入两个mdk5目录节点，然后整个节点排除编译
+
+3. 勾选hex，拖曳烧录
+
+4. 可以勾选Linker的不加入标准库，然后编译，查看哪些模块使用了ios_base之类（例如micro_interpreter.o）
+Don't Search Standard Libraries
+
+5. MDK的文件右键对话框，勾选包含进编译，那个勾选其实是三态的，最好是灰色的勾选
+
+6. micro_interpreter.h的portable_type_to_tflitetype.h的complex会导致运行期无法输出日志？？？
+#include "tensorflow/lite/portable_type_to_tflitetype.h" //this make std::__l::ios_base::Init::Init()
+#if !defined(TF_LITE_STATIC_MEMORY)
+#include <complex>
+#endif
+
+还有一个文件portable_tensor.h
+
+7. micro_error_reporter.h 加上virtual
+class MicroErrorReporter : public ErrorReporter {
+ public:
+-->  virtual ~MicroErrorReporter() override {}
+
+8. main_functions.cc
+void setup() {
+只跑通一半，到这里就跑不下去
+#if 0	
+  // Build an interpreter to run the model with.
+  static tflite::MicroInterpreter static_interpreter(
+      model, micro_op_resolver, tensor_arena, kTensorArenaSize, error_reporter);
+  interpreter = &static_interpreter;
+
+9. -flto（link-time optimization)可以大幅度减小hex体积，避免main_functions.cc
+指针指向static全局导致崩溃的奇怪错误（也可能因为开发板nor flash有坏道导致）
+
+10. EVK-MIMXRT1020-sai_v8研究不下去.rar,卡死在这里，size()==0
+const SubGraph* MicroAllocator::GetSubGraphFromModel(const Model* model) {
+  //while(1);
+	auto* subgraphs = model->subgraphs();
+  if (subgraphs->size() < 1) {
+卡死在这里，size()==0---->		while(1); //FIXME:crash here
+		TF_LITE_REPORT_ERROR(error_reporter_,
+                         "Only 1 subgraph is currently supported.\n"); //run here
+    return nullptr;
+  }
+	return (*subgraphs)[0];
+}
+打算换一份代码再研究
+
+
