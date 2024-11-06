@@ -39,3 +39,8 @@ https://github.com/weimingtom/rt1020-evk-playground/blob/master/sai_no_mic/src/m
 * Makefile for ubuntu emulation  
 https://github.com/weimingtom/rt1020-evk-playground/blob/master/sai_no_mic/packs/tensorflow-lite/2.4.0/Makefile  
 https://github.com/weimingtom/rt1020-evk-playground/blob/master/sai_no_mic/src/main.cc  
+* no microphone test input data
+https://github.com/weimingtom/rt1020-evk-playground/blob/master/sai_no_mic/src/audio_provider_test.cc  
+* no microphone test output  
+https://github.com/weimingtom/rt1020-evk-playground/blob/master/sai_no_mic/src/command_responder.cc  
+https://github.com/weimingtom/rt1020-evk-playground/blob/master/sai_no_mic/uart_out.txt  
